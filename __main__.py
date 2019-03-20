@@ -43,14 +43,26 @@ if __name__ == '__main__':
     # plt.colorbar(ctr)
     # plt.title('Goldestein funkcija')
     # plt.show()
-
-
+    get_bin = lambda x, n: format(x, 'b').zfill(n)
 
     opseg = [-2, 2]
-    test_vel = 2
+    test_vel = 3
     pop_vel = 100
-    # zaokrugljujem na 2 decimale jer hocu da ih spojim u jedan broj koji ce da postane binaran
-    pop = [[round(random.uniform(*opseg), 2) for i in range(test_vel)] for j in range(pop_vel)]
+    # zaokrugljujem na 23decimale jer hocu da ih spojim u jedan broj koji ce da postane binaran
+    # 3 decimale za vrednosti od -2  do 2 je 4000 brojeva sto znaci da nam treba 12 digit-a 
+    pop = [[round(random.uniform(*opseg), 3) for i in range(test_vel)] for j in range(pop_vel)]
 
-    for hromozom in pop:
-        print(trosak(hromozom))
+    float_vrednosti = np.arange(-2, 2, 0.001)
+    _  = np.arange(0, 4000, 1)
+    binarni = [get_bin(i, 12) for i in _]
+
+    fv = [round(broj, 3) for broj in float_vrednosti]
+
+    dict_binarnih = dict(zip(fv, binarni))
+    print(dict_binarnih)
+
+
+
+
+#     for hromozom in pop:
+#         print(trosak(hromozom))
