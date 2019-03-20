@@ -49,5 +49,8 @@ if __name__ == '__main__':
     opseg = [-2, 2]
     test_vel = 2
     pop_vel = 100
-    pop = [[random.uniform(*opseg) for i in range(test_vel)] for j in range(pop_vel)]
+    # zaokrugljujem na 2 decimale jer hocu da ih spojim u jedan broj koji ce da postane binaran
+    pop = [[round(random.uniform(*opseg), 2) for i in range(test_vel)] for j in range(pop_vel)]
 
+    for hromozom in pop:
+        print(trosak(hromozom))
