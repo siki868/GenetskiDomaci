@@ -109,7 +109,7 @@ if __name__ == '__main__':
     best_ever_f = None
     t = 0
     max_iter = 5000
-    # zaokrugljujem na 23decimale jer hocu da ih spojim u jedan broj koji ce da postane binaran
+    # zaokruzivanje na 3 decimale jer hocu da ih spojim u jedan broj koji ce da postane binaran
     # 3 decimale za vrednosti od -2  do 2 je 4000 brojeva sto znaci da nam treba 12 digit-a 
     pop = [[round(random.uniform(*opseg), 3) for i in range(test_vel)] for j in range(pop_vel)]
 
