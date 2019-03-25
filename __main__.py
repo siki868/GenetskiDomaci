@@ -9,12 +9,26 @@
 #                        ^     ^
 
 
+# goldstein_v = np.vectorize(trosak)
+
+# x = np.arange(-2, 2, 0.002)
+# y = np.arange(-2, 2, 0.002)
+# X, Y = np.meshgrid(x, y)
+# Z = goldstein_v(X, Y)
+
+# plt.figure(num=1, figsize=(10,7))
+# plt.clf()
+# ctr = plt.contour(X, Y, Z, levels=[1e-1,5e-1,1e0,5e0,1e1,2e1,3e1,4e1,5e1,6e1,7e1,8e1,9e1,1e2,11e1])
+# plt.axes().set_aspect('equal')
+# plt.colorbar(ctr)
+# plt.title('Goldestein funkcija')
+# plt.show()
+
 import numpy as np
 import matplotlib.pyplot as plt
 import math
 import random
 
-mut_rates = 0.1
 
 
 
@@ -55,13 +69,13 @@ def mutacija(hromozom, rate):
 
 
 def get_dict(range, inc):
-    get_bin = lambda x, n: format(x, 'b').zfill(n)  # f-ja  int -> bin
-    float_v_np = np.arange(range[0], range[1]+0.001, inc) # np niz od -2 do 2 po 0.001 skoku (4k vrednosti)
-    _ = np.arange(0, len(float_v_np), 1)            # obicni brojevi od 0 do 4k koje cemo da pretvorimo u binarne
-    binarni = [get_bin(i, 12) for i in _]           # ^
-    f_v = [round(broj, 3) for broj in float_v_np]   # zaokruzivanje na 3 decimale da bi mogli da izvucemo binarnu vrednost preko floata kao kljuc
+    get_bin = lambda x, n: format(x, 'b').zfill(n)          # f-ja  int -> bin
+    float_v_np = np.arange(range[0], range[1]+0.001, inc)   # np niz od -2 do 2 po 0.001 skoku (4k vrednosti)
+    _ = np.arange(0, len(float_v_np), 1)                    # obicni brojevi od 0 do 4k koje cemo da pretvorimo u binarne
+    binarni = [get_bin(i, 12) for i in _]                   # ^
+    f_v = [round(broj, 3) for broj in float_v_np]           # zaokruzivanje na 3 decimale da bi mogli da izvucemo binarnu vrednost preko floata kao kljuc
     
-    return dict(zip(f_v, binarni))                  # (-2. : 000000000000) ...
+    return dict(zip(f_v, binarni))                          # (-2. : 000000000000) ...
 
 
 def turnir(fja, pop, vel, d):
@@ -84,62 +98,30 @@ def ukrsti(h1, h2):
     h4 = h2[:r] + h1[r:]
     return h3, h4
 
-if __name__ == '__main__':
-    # goldstein_v = np.vectorize(trosak)
-    
-    # x = np.arange(-2, 2, 0.002)
-    # y = np.arange(-2, 2, 0.002)
-    # X, Y = np.meshgrid(x, y)
-    # Z = goldstein_v(X, Y)
-    
-    # plt.figure(num=1, figsize=(10,7))
-    # plt.clf()
-    # ctr = plt.contour(X, Y, Z, levels=[1e-1,5e-1,1e0,5e0,1e1,2e1,3e1,4e1,5e1,6e1,7e1,8e1,9e1,1e2,11e1])
-    # plt.axes().set_aspect('equal')
-    # plt.colorbar(ctr)
-    # plt.title('Goldestein funkcija')
-    # plt.show()
-
-    opseg = [-2, 2]
-    test_vel = 2
-    pop_vel = 100
-    npop_vel = 100
-    best = None
-    best_f = None
-    best_ever_f = None
-    t = 0
-    max_iter = 5000
-    # zaokruzivanje na 3 decimale jer hocu da ih spojim u jedan broj koji ce da postane binaran
-    # 3 decimale za vrednosti od -2  do 2 je 4000 brojeva sto znaci da nam treba 12 digit-a 
+def genetski(opseg, pop_vel, max_iter, test_vel, mut_rate):
+    npop_vel = pop_vel
     pop = [[round(random.uniform(*opseg), 3) for i in range(test_vel)] for j in range(pop_vel)]
 
-    # bbitan dict
+    # Bitan dict
     dict_binarnih = get_dict(opseg, 0.001)
 
     pop = [dict_binarnih[j[0]] + dict_binarnih[j[1]] for j in pop]
 
-    # testiranje mutacija
-    # print('Spreman!\n')
-    # for hromozom in pop:
-    #     ind = pop.index(hromozom)
-    #     # test_d = dekoduj(hromozom, dict_binarnih)
-    #     print(hromozom)
-    #     mutacija(hromozom, mut_rates, dict_binarnih, pop)
-    #     print(pop[ind])
-    #     if(input() == 'd'):
-    #         continue
-    #     else:
-    #         break
-
-
+    t = 0
+    best = None
+    best_f = None
+    best_ever_f = None
+    lista_najboljih = []
     while best_f != 0 and t < max_iter:
         n_pop = pop[:]
         while(len(n_pop) < pop_vel+npop_vel):
             h1 = turnir(trosak, pop, 3, dict_binarnih)
             h2 = turnir(trosak, pop, 3, dict_binarnih)
             h3, h4 = ukrsti(h1, h2)
-            h3 = mutacija(h3, mut_rates)
-            h4 = mutacija(h4, mut_rates)
+            # print(dekoduj(h3, dict_binarnih))
+            h3 = mutacija(h3, mut_rate)
+            # print(dekoduj(h3, dict_binarnih), '\n')
+            h4 = mutacija(h4, mut_rate)
             n_pop.append(h3)
             n_pop.append(h4)
             pop = sorted(n_pop, key=lambda x : trosak(dekoduj(x, dict_binarnih)))[:pop_vel]
@@ -153,3 +135,28 @@ if __name__ == '__main__':
                     best_ever_sol = best
             x, y = dekoduj(best, dict_binarnih)
             print(f'{t}: ({x}, {y}) loss= {round(best_f, 5)}')
+            lista_najboljih.append(best_f)
+        lista_najboljih = lista_najboljih[:max_iter]
+    return lista_najboljih
+
+
+
+if __name__ == '__main__':
+    opseg = [-2, 2]
+    test_vel = 2
+    pop_vels = [20, 100, 150]
+    max_iter = 500
+    mut_rate = 0.5
+    test_vel = 2
+    best_by_gens = []
+
+    for pop_vel in pop_vels:
+        best_by_gens.append(genetski(opseg, pop_vel, max_iter, test_vel, mut_rate))
+
+    X = np.arange(0, max_iter, 1)
+    y_ticks = np.arange(0, 60, 2)
+    for Y in best_by_gens:
+        plt.plot(X, Y)
+    plt.yticks(y_ticks)
+    plt.show()
+
