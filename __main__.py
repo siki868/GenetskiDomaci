@@ -152,17 +152,21 @@ if __name__ == '__main__':
     max_iter = int(config[ind]['max_iter'])
     mut_rate = float(config[ind]['mut_rate'])
     test_vel = int(config[ind]['test_vel'])
-    best_by_gens = []
+    broj_pokretanja = int(config[ind]['broj_pokretanja'])
 
-    for pop_vel in pop_vels:
-        ga = GA(opseg, pop_vel, max_iter, test_vel, mut_rate)
-        best_by_gens.append(ga.evaluate())
+    fig, ax = plt.subplots(nrows=2, ncols=broj_pokretanja//2)
+    
+    for j in ax:
+        for k in j:
+            best_by_gens = []
+            for pop_vel in pop_vels:
+                ga = GA(opseg, pop_vel, max_iter, test_vel, mut_rate)
+                best_by_gens.append(ga.evaluate())
 
-    X = np.arange(0, max_iter, 1)
-    y_ticks = np.arange(0, 60, 2)
-    for Y, pop in zip(best_by_gens, pop_vels):
-        plt.plot(X, Y, label=f'{pop} vel pop.')
-    plt.yticks(y_ticks)
-    plt.legend()
+            X = np.arange(0, max_iter, 1)
+            y_ticks = np.arange(0, 60, 2)
+            for Y, pop in zip(best_by_gens, pop_vels):
+                k.plot(X, Y, label=f'{pop} vel pop.')
+            k.legend()
     plt.show()
 
