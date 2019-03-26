@@ -154,19 +154,44 @@ if __name__ == '__main__':
     test_vel = int(config[ind]['test_vel'])
     broj_pokretanja = int(config[ind]['broj_pokretanja'])
 
-    fig, ax = plt.subplots(nrows=2, ncols=broj_pokretanja//2)
-    
-    for j in ax:
-        for k in j:
+
+
+    if broj_pokretanja <= 2:
+        srednje_vr = []
+        for i in range(broj_pokretanja):
             best_by_gens = []
             for pop_vel in pop_vels:
                 ga = GA(opseg, pop_vel, max_iter, test_vel, mut_rate)
                 best_by_gens.append(ga.evaluate())
-
+            srednje_vr.append(np.mean(best_by_gens))
             X = np.arange(0, max_iter, 1)
             y_ticks = np.arange(0, 60, 2)
             for Y, pop in zip(best_by_gens, pop_vels):
-                k.plot(X, Y, label=f'{pop} vel pop.')
-            k.legend()
-    plt.show()
+                plt.plot(X, Y, label=f'{pop} vel pop.')
+            plt.legend()
+        plt.show()
+        iksic = np.arange(0, len(srednje_vr), 1)
+        plt.plot(iksic, srednje_vr)
+        plt.show()
+    elif broj_pokretanja % 2 == 0:
+        fig, ax = plt.subplots(nrows=2, ncols=broj_pokretanja//2)
+        srednje_vr = []
+        for j in ax:
+            for k in j:
+                best_by_gens = []
+                for pop_vel in pop_vels:
+                    ga = GA(opseg, pop_vel, max_iter, test_vel, mut_rate)
+                    best_by_gens.append(ga.evaluate())
+                srednje_vr.append(np.mean(best_by_gens))
+                X = np.arange(0, max_iter, 1)
+                y_ticks = np.arange(0, 60, 2)
+                for Y, pop in zip(best_by_gens, pop_vels):
+                    k.plot(X, Y, label=f'{pop} vel pop.')
+                k.legend()
+        plt.show()
+        iksic = np.arange(0, len(srednje_vr), 1)
+        plt.plot(iksic, srednje_vr)
+        plt.show()
+    else:
+        print('Pls unesi paran broj puta ako hoces vise od 2 :) ty')
 
