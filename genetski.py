@@ -81,18 +81,19 @@ class GA:
         
     def evaluate(self):
         npop_vel = self.pop_vel
-        pop = [[round(random.uniform(*self.opseg), 3) for i in range(self.test_vel)] for j in range(self.pop_vel)]
+        pop_float = [[round(random.uniform(*self.opseg), 3) for i in range(self.test_vel)] for j in range(self.pop_vel)]
 
         # Bitan dict
         dict_binarnih = self.__get_dict__(self.opseg, 0.001)
 
-        pop = [dict_binarnih[j[0]] + dict_binarnih[j[1]] for j in pop]
+        pop = [dict_binarnih[j[0]] + dict_binarnih[j[1]] for j in pop_float]
 
         t = 0
         best = None
         best_f = None
         best_ever_f = None
         lista_najboljih = []
+        srednje = []
         while best_f != 0 and t < self.max_iter:
             n_pop = pop[:]
             while(len(n_pop) < self.pop_vel+npop_vel) and t < self.max_iter:
@@ -117,5 +118,7 @@ class GA:
                 x, y = self.__dekoduj__(best, dict_binarnih)
                 print(f'{t}: ({x}, {y}) loss= {round(best_f, 5)}')
                 lista_najboljih.append(best_f)
+                sr = [self.__trosak__(self.__dekoduj__(x, dict_binarnih)) for x in n_pop]
+                srednje.append(np.mean(sr))
             lista_najboljih = lista_najboljih[:self.max_iter]
-        return lista_najboljih
+        return lista_najboljih, srednje
