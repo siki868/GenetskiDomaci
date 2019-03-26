@@ -140,15 +140,18 @@
 #     return lista_najboljih
 
 from genetski import GA, np, plt
-
+import configparser
 
 if __name__ == '__main__':
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    ind = config.sections()[0]
+
     opseg = [-2, 2]
-    test_vel = 2
-    pop_vels = [20, 100, 150]
-    max_iter = 500
-    mut_rate = 0.5
-    test_vel = 2
+    pop_vels = [int(br) for br in config[ind]['pop_vels'].split(',')]
+    max_iter = int(config[ind]['max_iter'])
+    mut_rate = float(config[ind]['mut_rate'])
+    test_vel = int(config[ind]['test_vel'])
     best_by_gens = []
 
     for pop_vel in pop_vels:

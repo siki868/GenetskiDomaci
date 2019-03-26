@@ -95,7 +95,7 @@ class GA:
         lista_najboljih = []
         while best_f != 0 and t < self.max_iter:
             n_pop = pop[:]
-            while(len(n_pop) < self.pop_vel+npop_vel):
+            while(len(n_pop) < self.pop_vel+npop_vel) and t < self.max_iter:
                 h1 = self.__turnir__(self.__trosak__, pop, 3, dict_binarnih)
                 h2 = self.__turnir__(self.__trosak__, pop, 3, dict_binarnih)
                 h3, h4 = self.__ukrsti__(h1, h2)
