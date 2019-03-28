@@ -175,17 +175,19 @@ if __name__ == '__main__':
                 plt.plot(X, Y, label=f'{pop} vel pop.')
             plt.legend()
             plt.grid(True)
-            plt.show()
+        plt.show()
     elif broj_pokretanja % 2 == 0:
         fig, ax = plt.subplots(nrows=2, ncols=broj_pokretanja//2)
         fig.suptitle(f'Najmanji gubici za {broj_pokretanja} pokretanja')
-        srednje_vr = []
+        srednje = []
         for j in ax:
             for k in j:
                 best_by_gens = []
                 for pop_vel in pop_vels:
                     ga = GA(opseg, pop_vel, max_iter, test_vel, mut_rate)
-                    best_by_gens.append(ga.evaluate())
+                    najbolji, srednji = ga.evaluate()
+                    best_by_gens.append(najbolji)
+                    srednje.append(srednji)
                 X = np.arange(0, max_iter, 1)
                 y_ticks = np.arange(0, 60, 2)
                 for Y, pop in zip(best_by_gens, pop_vels):
@@ -193,6 +195,10 @@ if __name__ == '__main__':
                 k.grid(True)
                 k.legend()
         plt.show()
+        for Y, pop in zip(srednje, pop_vels):
+            plt.plot(X, Y, label=f'{pop} vel pop.')
+            plt.legend()
+            plt.grid(True)
+        plt.show()
     else:
         print('Pls unesi paran broj puta ako hoces vise od 2 :) ty')
-
