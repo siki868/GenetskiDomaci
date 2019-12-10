@@ -1,2 +1,3 @@
-# GenetskiDomaci
-Genetic algorithm for function minimization
+# GA assignment
+
+Function minimization using genetic algorithm
